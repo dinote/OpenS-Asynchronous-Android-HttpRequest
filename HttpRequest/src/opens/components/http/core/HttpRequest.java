@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
 
+import android.net.http.AndroidHttpClient;
 import android.os.Message;
 
 import opens.components.cache.Cache;
@@ -237,7 +238,13 @@ public abstract class HttpRequest implements Runnable {
 			}
 		}
 		
-		HttpClient client = new DefaultHttpClient(); //TODO implement a client pool
+		/**
+		 * Leonardo 15/06/2012
+		 * Change the HttpClient to AndroidHttpClient
+		 * Afeter many requests the memory usage is very high and the OutOfMemoryError has occurred,
+		 * to avoid this change to AndroidHttpClient and works well :-)
+		 */
+		AndroidHttpClient client = AndroidHttpClient.newInstance(this.getClass().getName()); //TODO implement a client pool
 		HttpConnectionParams.setSoTimeout(client.getParams(), timeout);		
 		
 		sendMessageToHandler(REQUEST_STARTED, this);
@@ -268,5 +275,6 @@ public abstract class HttpRequest implements Runnable {
 			sendMessageToHandler(REQUEST_ERROR, this);
 		}
 		sendMessageToHandler(REQUEST_FINISHED, this);
+		client.close(); /* Free the usage resources */
 	}	
 }
