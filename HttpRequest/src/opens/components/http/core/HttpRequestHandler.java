@@ -54,10 +54,11 @@ public class HttpRequestHandler extends Handler{
 					if (method.getName().equals(action) == false) {
 						continue;
 					}
-					Class [] parameterTypes = method.getParameterTypes();
+					Class[] parameterTypes = method.getParameterTypes();
 					if (parameterTypes.length == 0) {
 						method.setAccessible(true);
 						method.invoke(target);
+						break;
 					} else if (parameterTypes.length > 1) {
 						continue;
 					}
@@ -94,6 +95,7 @@ public class HttpRequestHandler extends Handler{
 	
 	public void setOnSuccess(TargetAction onSuccess) {
 		this.onSuccess = onSuccess;
+		onSuccess.invokeWithParam(onSuccess);
 	}
 
 
@@ -112,10 +114,11 @@ public class HttpRequestHandler extends Handler{
 
 	public void setOnFinish(TargetAction onFinish) {
 		this.onFinish = onFinish;
+		onFinish.invokeWithParam(onFinish);
 	}
 
 
-
+	@Override
 	public void handleMessage(Message message) {
 		int what = message.what;
 		TargetAction selectedAction = null;

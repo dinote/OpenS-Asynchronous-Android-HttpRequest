@@ -5,10 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONTokener;
@@ -55,8 +52,6 @@ public abstract class HttpRequest implements Runnable {
 	
 	private String url;
 	
-	private int timeout = 25000;
-	
 	private boolean error;
 	
 	private boolean finished;
@@ -67,21 +62,12 @@ public abstract class HttpRequest implements Runnable {
 	
 	private boolean responseFromCache = false;
 	
-	private HttpResponse response = null;
-	
-	private HttpRequestParams params;
-	
 	private int cachePolicy;
 	
 	public HttpRequest() {
-		super();		
+		super();
 		this.handler = new HttpRequestHandler();
 		cachePolicy = DefaultCachePolicy;
-		params = new HttpRequestParams();
-	}
-	
-	public HttpResponse getResponse() {
-		return response;
 	}
 		
 	public boolean isCachePolicySet(int cachePolicy) {
@@ -114,7 +100,6 @@ public abstract class HttpRequest implements Runnable {
 	
 	public HttpRequest get(String url) {
 		this.url = url;
-		this.params.clear();
 		return this;
 	}
 	
@@ -131,7 +116,7 @@ public abstract class HttpRequest implements Runnable {
 	}
 	
 	public void onFinish(Object target, String action) {
-		handler.setOnStart(new HttpRequestHandler.TargetAction(target, action));
+		handler.setOnFinish(new HttpRequestHandler.TargetAction(target, action));
 	}
 	
 	public String getUrl() {
@@ -238,43 +223,29 @@ public abstract class HttpRequest implements Runnable {
 			}
 		}
 		
-		/**
-		 * Leonardo 15/06/2012
-		 * Change the HttpClient to AndroidHttpClient
-		 * Afeter many requests the memory usage is very high and the OutOfMemoryError has occurred,
-		 * to avoid this change to AndroidHttpClient and works well :-)
-		 */
-		AndroidHttpClient client = AndroidHttpClient.newInstance(this.getClass().getName()); //TODO implement a client pool
-		HttpConnectionParams.setSoTimeout(client.getParams(), timeout);		
+		AndroidHttpClient client = AndroidHttpClient.newInstance("Catalog Brasil Thread");
 		
 		sendMessageToHandler(REQUEST_STARTED, this);
 		try {
 			switch(method) {
-			case METHOD_GET:			
-				response = client.execute(new HttpGet(url + params.toURLParametersString()));
-				this.onHttpResponseReceived(response);				
-				break;
-			}
-			
-			if (isCachePolicySet(DoNotWriteToCacheCachePolicy) == false &&
-					cache != null && cacheSerializer != null) {
-				cache.put(getRequestCacheKey(), getObjectToCache(), cacheSerializer);
-			}
-			sendMessageToHandler(REQUEST_SUCCESS, this);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			if (isCachePolicySet(FallbackToCacheIfLoadFailsCachePolicy)) {
-				if (tryToLoadFromCache(cache, cacheSerializer)) {
-					sendMessageToHandler(REQUEST_FINISHED, this);
-					return;
+				case METHOD_GET: {
+					HttpResponse response = client.execute(new HttpGet(url));
+					this.onHttpResponseReceived(response);
+					client.close();
+					break;
 				}
-			}			
+			}
+			client.close();
+			sendMessageToHandler(REQUEST_SUCCESS, this);
+		} 
+		catch (Exception e) {
+			e.printStackTrace();
 			finished = true;
 			error = true;
+			client.close();
 			sendMessageToHandler(REQUEST_ERROR, this);
 		}
+		client.close();
 		sendMessageToHandler(REQUEST_FINISHED, this);
-		client.close(); /* Free the usage resources */
 	}	
 }

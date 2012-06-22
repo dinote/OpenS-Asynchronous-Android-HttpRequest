@@ -4,8 +4,6 @@ import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import android.util.Log;
-
 /**
  * Used to regulate the maximal number of concurrent operations.
  * Operation is any class that implements Runnable. 
@@ -25,8 +23,6 @@ import android.util.Log;
  *
  */
 public class RequestQueue {
-	
-	final private static String tag = "OperationQueue";  
 	
 	private class OperationTask implements Runnable {
 		
@@ -83,11 +79,12 @@ public class RequestQueue {
 		pending.add(action);
 		if (active.size() < maxConcurrent) {
 			startNext();
+			
 		}
 	}
 	
 	synchronized private void startNext() {
-		Log.d(tag, "Starting runnable with active count: " + active.size());
+		//Log.d(tag, "Starting runnable with active count: " + active.size());
 		if (!pending.isEmpty()) {
 			Runnable newActive = pending.get(0);
 			pending.remove(0);
