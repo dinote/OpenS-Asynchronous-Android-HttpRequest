@@ -1,8 +1,10 @@
 package opens.components.http.core;
 
+import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 
 /**
  * Used to regulate the maximal number of concurrent operations.
@@ -52,6 +54,10 @@ public class RequestQueue {
 	
 	private int maxConcurrent = 4;
 	
+	private Object targetClass;
+	
+	private String targetAction;
+	
 	public int getMaxConcurrent() {
 		return maxConcurrent;
 	}
@@ -83,13 +89,49 @@ public class RequestQueue {
 		}
 	}
 	
+	/**
+	 * Set a callback to all downloads finished
+	 * @param target object of atual class
+	 * @param action method of atual class
+	 */
+	public void setOnFinishAllDownloadsCallBack(Object target, String action) {
+		this.targetClass = target;
+		this.targetAction = action;
+	}
+	
+	/**
+	 * Notify this call back to indicate the finish of all downloads
+	 * TODO - Suport to parameters
+	 * @throws Exception if any error has ocurred
+	 * @author Leonardo Rossetto <leonardoxh@gmail.com>
+	 */
+	public synchronized void notifyHasFinish() throws Exception {
+		if(this.targetClass != null) {
+			Class<?> target = this.targetClass.getClass();
+			Method action = target.getMethod(this.targetAction);
+			action.setAccessible(true);
+			action.invoke(this.targetClass);
+		}
+	}
+	
 	synchronized private void startNext() {
-		//Log.d(tag, "Starting runnable with active count: " + active.size());
+		//Log.d("Teste>", "Starting runnable with active count: " + active.size());
 		if (!pending.isEmpty()) {
 			Runnable newActive = pending.get(0);
 			pending.remove(0);
 			active.add(newActive);
-			pool.execute(new OperationTask(newActive, this));			
+			pool.execute(new OperationTask(newActive, this));
+		}
+		if(active.size() == 0) {
+			/**
+			 * Notify all downloads are done
+			 */
+			try {
+				this.notifyHasFinish();
+			}
+			catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

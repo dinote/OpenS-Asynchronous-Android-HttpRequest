@@ -223,7 +223,7 @@ public abstract class HttpRequest implements Runnable {
 			}
 		}
 		
-		AndroidHttpClient client = AndroidHttpClient.newInstance("Catalog Brasil Thread");
+		AndroidHttpClient client = AndroidHttpClient.newInstance(this.getClass().getName());
 		
 		sendMessageToHandler(REQUEST_STARTED, this);
 		try {
