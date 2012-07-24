@@ -8,6 +8,7 @@ To get started -- checkout http://dinote.wordpress.com/opens-asynchronous-androi
 
 Features
 -----
++ A new mechanism to use the callbacks now they can be used on HttpRequest class
 + **Asynchronous** http request invoked **outside the UI thread**
 + Handle the **response in plain methods** (no anonymous callbacks)
 + Transparent **in memory, to file, or multi-level caching**
