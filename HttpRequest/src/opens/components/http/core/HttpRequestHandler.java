@@ -30,7 +30,7 @@ import android.os.Message;
  * @author Vatroslav Dino Matijas
  *
  */
-public class HttpRequestHandler extends Handler{
+public class HttpRequestHandler extends Handler {
 	
 	public static class TargetAction {
 		
@@ -59,7 +59,8 @@ public class HttpRequestHandler extends Handler{
 						method.setAccessible(true);
 						method.invoke(target);
 						break;
-					} else if (parameterTypes.length > 1) {
+					} 
+					else if (parameterTypes.length > 1) {
 						continue;
 					}
 					Class parameterType = parameterTypes[0];
@@ -95,13 +96,12 @@ public class HttpRequestHandler extends Handler{
 	
 	public void setOnSuccess(TargetAction onSuccess) {
 		this.onSuccess = onSuccess;
-		onSuccess.invokeWithParam(onSuccess);
+		onSuccess.invokeWithParam(this.onSuccess);
 	}
 
-
-
-	public void setOnError(TargetAction onError) {
+	public void setOnError(TargetAction onError) { //isso não funciona
 		this.onError = onError;
+		//this.onError.invokeWithParam(this.onError);
 	}
 
 

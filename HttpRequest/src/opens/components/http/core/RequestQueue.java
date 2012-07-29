@@ -107,25 +107,22 @@ public class RequestQueue {
 	 */
 	public synchronized void notifyHasFinish() throws Exception {
 		if(this.targetClass != null) {
-			Class<?> target = this.targetClass.getClass();
-			Method action = target.getMethod(this.targetAction);
+			Method action = this.targetClass.getClass().getMethod(this.targetAction);
 			action.setAccessible(true);
 			action.invoke(this.targetClass);
 		}
 	}
 	
 	synchronized private void startNext() {
-		//Log.d("Teste>", "Starting runnable with active count: " + active.size());
+		//System.err.println("Starting runnable with active count: " + active.size());
+		//System.out.println("Pending runnable: " + pending.size());
 		if (!pending.isEmpty()) {
 			Runnable newActive = pending.get(0);
 			pending.remove(0);
 			active.add(newActive);
 			pool.execute(new OperationTask(newActive, this));
 		}
-		if(active.size() == 0) {
-			/**
-			 * Notify all downloads are done
-			 */
+		if(active.isEmpty()) {
 			try {
 				this.notifyHasFinish();
 			}
@@ -133,6 +130,14 @@ public class RequestQueue {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	/**
+	 * @author Leonardo Rossetto <leonardoxh@gmail.com>
+	 * @return if have connections false in other wise
+	 */
+	public boolean verifityIfHavePending() {
+		return this.pending.isEmpty();
 	}
 	
 	synchronized public void operationComplete(Runnable complete) {

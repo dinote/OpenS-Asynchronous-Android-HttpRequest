@@ -10,5 +10,11 @@ public class StringRequest extends HttpObjectRequest<String> {
 		String responseString = getString(response);
 		setResponseObject(responseString);
 	}
+	
+	//TODO - SUPORT THIS
+	@Override
+	protected void onErrorCallBack(String message) {
+		
+	}
 
 }

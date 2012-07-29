@@ -182,15 +182,40 @@ public abstract class HttpRequest implements Runnable {
 	 * @param response
 	 * @throws Exception
 	 */
-	abstract protected void onHttpResponseReceived(HttpResponse response)  throws Exception;	
+	abstract protected void onHttpResponseReceived(HttpResponse response)  throws Exception;
 	
-	private void sendMessageToHandler(int what, Object obj) {
+	/**
+	 * Override this method to suport a custom error callback after error on a download.
+	 * This method must be called on the worker thread and not on the UI thread
+	 * @param message the error message from exception 
+	 * @author Leonardo Rossetto <leonardoxh@gmail.com>
+	 */
+	protected void onErrorCallBack(String message) { }
+	
+	private void sendMessageToHandler(int what, Object obj, String errorMessage) {
 		if (this.handler == null) {
 			return;
 		}
 		
 		Message msg = Message.obtain(handler, what, obj);
 		handler.sendMessage(msg);
+		
+		//TODO implementeation of other callbacks
+		switch(what) {
+			case HttpRequest.REQUEST_STARTED: {
+				break;
+			}
+			case HttpRequest.REQUEST_FINISHED: {
+				break;
+			}
+			case HttpRequest.REQUEST_SUCCESS: {
+				break;
+			}
+			case HttpRequest.REQUEST_ERROR: {
+				this.onErrorCallBack(errorMessage);
+				break;
+			}
+		}
 	}
 	
 	private boolean tryToLoadFromCache(Cache cache, CacheSerializer cacheSerializer) {
@@ -203,7 +228,7 @@ public abstract class HttpRequest implements Runnable {
 			this.responseFromCache = true;
 			this.loadFromCachedObject(cachedState);
 			this.finished = true;
-			sendMessageToHandler(REQUEST_SUCCESS, this);			
+			sendMessageToHandler(REQUEST_SUCCESS, this, null);			
 			return true;
 		}
 		return false;
@@ -223,9 +248,10 @@ public abstract class HttpRequest implements Runnable {
 			}
 		}
 		
-		AndroidHttpClient client = AndroidHttpClient.newInstance(this.getClass().getName());
+		AndroidHttpClient client = AndroidHttpClient.newInstance("Catalog Brasil Thread");
+		//HttpConnectionParams.setSoTimeout(client.getParams(), 25000);	//TODO - resuport parameters
 		
-		sendMessageToHandler(REQUEST_STARTED, this);
+		sendMessageToHandler(REQUEST_STARTED, this, null);
 		try {
 			switch(method) {
 				case METHOD_GET: {
@@ -236,16 +262,18 @@ public abstract class HttpRequest implements Runnable {
 				}
 			}
 			client.close();
-			sendMessageToHandler(REQUEST_SUCCESS, this);
+			sendMessageToHandler(REQUEST_SUCCESS, this, null);
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
 			finished = true;
 			error = true;
 			client.close();
-			sendMessageToHandler(REQUEST_ERROR, this);
+			sendMessageToHandler(REQUEST_ERROR, this, e.getMessage());
 		}
-		client.close();
-		sendMessageToHandler(REQUEST_FINISHED, this);
+		finally {
+			client.close();
+		}
+		sendMessageToHandler(REQUEST_FINISHED, this, null);
 	}	
 }

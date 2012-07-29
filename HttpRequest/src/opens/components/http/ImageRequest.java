@@ -20,5 +20,11 @@ public class ImageRequest extends HttpObjectRequest<Bitmap> {
 		return BitmapSerializer.instance();
 	}
 	
+	//TODO - Suport this
+	@Override
+	protected void onErrorCallBack(String message) {
+		
+	}
+	
 		
 }
