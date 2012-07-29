@@ -5,6 +5,9 @@ OpenS HttpRequest is an asynchronous http client for android with caching, conne
 
 To get started -- checkout http://dinote.wordpress.com/opens-asynchronous-android-httprequest/
 
+Added a onErroCallBack just override it on your sub-class of httprequest and you can control the error on all files.
+**setOnError or any of this others don't work more** it will be deprecated
+
 
 Features
 -----
