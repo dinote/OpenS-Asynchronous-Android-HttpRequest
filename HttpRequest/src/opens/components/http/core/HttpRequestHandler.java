@@ -28,7 +28,7 @@ import android.os.Message;
  * 
  * 
  * @author Vatroslav Dino Matijas
- *
+ * @deprecated This class don't work, dont't Use it
  */
 public class HttpRequestHandler extends Handler {
 	
@@ -93,31 +93,39 @@ public class HttpRequestHandler extends Handler {
 	}
 		
 	
-	
+	/**
+	 * @deprecated This method don't work
+	 */
 	public void setOnSuccess(TargetAction onSuccess) {
 		this.onSuccess = onSuccess;
-		onSuccess.invokeWithParam(this.onSuccess);
 	}
 
-	public void setOnError(TargetAction onError) { //isso não funciona
+	/**
+	 * @deprecated This method don't work
+	 */
+	public void setOnError(TargetAction onError) {
 		this.onError = onError;
-		//this.onError.invokeWithParam(this.onError);
 	}
 
 
-
+	/**
+	 * @deprecated This method don't work
+	 */
 	public void setOnStart(TargetAction onStart) {
 		this.onStart = onStart;
 	}
-
-
-
+	
+	/**
+	 * @deprecated This method don't work
+	 */
 	public void setOnFinish(TargetAction onFinish) {
 		this.onFinish = onFinish;
 		onFinish.invokeWithParam(onFinish);
 	}
 
-
+	/**
+	 * @deprecated 
+	 */
 	@Override
 	public void handleMessage(Message message) {
 		int what = message.what;

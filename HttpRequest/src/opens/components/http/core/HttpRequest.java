@@ -36,6 +36,8 @@ public abstract class HttpRequest implements Runnable {
 	public static final int REQUEST_FINISHED = 1;
 	public static final int REQUEST_SUCCESS = 2;
 	public static final int REQUEST_ERROR = 3;
+	
+	private static final String TAG = "HttpRequest";
 	 
 	public static final int DoNotWriteToCacheCachePolicy = 1;
 	public static final int DoNotReadFromCacheCachePolicy = 2;
@@ -103,18 +105,34 @@ public abstract class HttpRequest implements Runnable {
 		return this;
 	}
 	
+	/**
+	 * This method don't work
+	 * @deprecated Use onSuccessCallBack instead
+	 */
 	public void onSuccess(Object target, String action) {
 		handler.setOnSuccess(new HttpRequestHandler.TargetAction(target, action));
 	}
 	
+	/**
+	 * This method don't work
+	 * @deprecated Use onErrorCallBack instead
+	 */
 	public void onError(Object target, String action) {
 		handler.setOnError(new HttpRequestHandler.TargetAction(target, action));
 	}
 	
+	/**
+	 * This method don't work
+	 * @deprecated Use onStartCallBack instead
+	 */
 	public void onStart(Object target, String action) {
 		handler.setOnStart(new HttpRequestHandler.TargetAction(target, action));
 	}
 	
+	/**
+	 * This method don't work
+	 * @deprecated Use onFinishCallBack instead
+	 */
 	public void onFinish(Object target, String action) {
 		handler.setOnFinish(new HttpRequestHandler.TargetAction(target, action));
 	}
@@ -192,6 +210,24 @@ public abstract class HttpRequest implements Runnable {
 	 */
 	protected void onErrorCallBack(String message) { }
 	
+	/**
+	 * Override this method to suport a custom start of download callback
+	 * Call this method on worker thread
+	 */
+	protected void onStartCallBack() { }
+	
+	/**
+	 * Override this method to suport a custom finish of downloads callback
+	 * Call this method on the worker thread
+	 */
+	protected void onFinishCallBack() { }
+	
+	/**
+	 * Override this to suport a custom sucess callback
+	 * Call on worker thread
+	 */
+	protected void onSuccessCallBack() { }
+	
 	private void sendMessageToHandler(int what, Object obj, String errorMessage) {
 		if (this.handler == null) {
 			return;
@@ -200,15 +236,17 @@ public abstract class HttpRequest implements Runnable {
 		Message msg = Message.obtain(handler, what, obj);
 		handler.sendMessage(msg);
 		
-		//TODO implementeation of other callbacks
 		switch(what) {
 			case HttpRequest.REQUEST_STARTED: {
+				this.onStartCallBack();
 				break;
 			}
 			case HttpRequest.REQUEST_FINISHED: {
+				this.onFinishCallBack();
 				break;
 			}
 			case HttpRequest.REQUEST_SUCCESS: {
+				this.onSuccessCallBack();
 				break;
 			}
 			case HttpRequest.REQUEST_ERROR: {
@@ -248,7 +286,7 @@ public abstract class HttpRequest implements Runnable {
 			}
 		}
 		
-		AndroidHttpClient client = AndroidHttpClient.newInstance("Catalog Brasil Thread");
+		AndroidHttpClient client = AndroidHttpClient.newInstance(HttpRequest.TAG);
 		//HttpConnectionParams.setSoTimeout(client.getParams(), 25000);	//TODO - resuport parameters
 		
 		sendMessageToHandler(REQUEST_STARTED, this, null);

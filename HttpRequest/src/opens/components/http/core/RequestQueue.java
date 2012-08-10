@@ -114,8 +114,6 @@ public class RequestQueue {
 	}
 	
 	synchronized private void startNext() {
-		//System.err.println("Starting runnable with active count: " + active.size());
-		//System.out.println("Pending runnable: " + pending.size());
 		if (!pending.isEmpty()) {
 			Runnable newActive = pending.get(0);
 			pending.remove(0);

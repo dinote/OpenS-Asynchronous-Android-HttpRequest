@@ -3,11 +3,13 @@ OpenS Ð Asynchronous Android HttpRequest
 
 OpenS HttpRequest is an asynchronous http client for android with caching, connection throttling and a simple to use callback mechanism. Requests are performed outside the main UI thread, but callbacks are invoked in the same thread that the request was created on. Instead of using the anonymous callbacks, it uses a simpler target-action callback mechanism that allows you to use any method as the callback.
 
-To get started -- checkout http://dinote.wordpress.com/opens-asynchronous-android-httprequest/
+Removed the simple app from project, check the repository of example here:
+https://github.com/leonardoxh/Asyncrounous-Http-Requests-example
 
-Added a onErroCallBack just override it on your sub-class of httprequest and you can control the error on all files.
-**setOnError or any of this others don't work more** it will be deprecated
+Other methods will be removed the class HttpRequestHandler don't work more it will be removed soon,
+Check the callbacks onErrorCallBack, onStartCallBack, onFinishCallBack and the others.
 
+The JSONRequests is not stable yet
 
 Features
 -----
