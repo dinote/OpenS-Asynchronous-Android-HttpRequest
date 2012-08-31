@@ -13,11 +13,7 @@ The JSONRequests is not stable yet
 
 Features
 -----
-+ A new mechanism to use the callbacks now they can be used on HttpRequest class
-+ **Asynchronous** http request invoked **outside the UI thread**
-+ Handle the **response in plain methods** (no anonymous callbacks)
-+ Transparent **in memory, to file, or multi-level caching**
-+ **Image** and **JSON** requests
-+ **Connection throttling** with max concurrent requests</li>
-+ Thread pool to **minimize resource usage**
-+ Includes a **lazy loaded image view** (RemoteImageView)
+- Don't need evoke outside the UI thread Thread controlling
+- Stable asynchronous JSON requests
+- More simple usage **less classes**
+- More eficient memory controll
