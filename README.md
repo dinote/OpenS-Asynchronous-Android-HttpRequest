@@ -17,3 +17,5 @@ Features
 - Stable asynchronous JSON requests
 - More simple usage **less classes**
 - More eficient memory controll
+- A very very powerfull bitmapDisplayer
+- More caching control and more easy to use it
