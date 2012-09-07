@@ -15,7 +15,6 @@ import android.os.Message;
 
 import opens.components.cache.Cache;
 import opens.components.cache.serializers.CacheSerializer;
-import opens.components.http.ImageRequest;
 
 /**
  * HttpResponse base class. Should be subclassed only if for some reason
@@ -105,38 +104,6 @@ public abstract class HttpRequest implements Runnable {
 		return this;
 	}
 	
-	/**
-	 * This method don't work
-	 * @deprecated Use onSuccessCallBack instead
-	 */
-	public void onSuccess(Object target, String action) {
-		handler.setOnSuccess(new HttpRequestHandler.TargetAction(target, action));
-	}
-	
-	/**
-	 * This method don't work
-	 * @deprecated Use onErrorCallBack instead
-	 */
-	public void onError(Object target, String action) {
-		handler.setOnError(new HttpRequestHandler.TargetAction(target, action));
-	}
-	
-	/**
-	 * This method don't work
-	 * @deprecated Use onStartCallBack instead
-	 */
-	public void onStart(Object target, String action) {
-		handler.setOnStart(new HttpRequestHandler.TargetAction(target, action));
-	}
-	
-	/**
-	 * This method don't work
-	 * @deprecated Use onFinishCallBack instead
-	 */
-	public void onFinish(Object target, String action) {
-		handler.setOnFinish(new HttpRequestHandler.TargetAction(target, action));
-	}
-	
 	public String getUrl() {
 		return url;
 	}
@@ -152,7 +119,7 @@ public abstract class HttpRequest implements Runnable {
 	public Cache getCache () {
 		return cache;
 	}
-	
+	/* TODO: this method don't work more rebuild-it */
 	public void setCache(Cache cache) {
 		this.cache = cache;
 	}

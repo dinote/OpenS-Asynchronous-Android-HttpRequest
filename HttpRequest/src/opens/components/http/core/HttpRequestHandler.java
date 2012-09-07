@@ -1,8 +1,6 @@
 package opens.components.http.core;
 
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Method;
-
 
 import android.os.Handler;
 import android.os.Message;
@@ -28,54 +26,18 @@ import android.os.Message;
  * 
  * 
  * @author Vatroslav Dino Matijas
- * @deprecated This class don't work, dont't Use it
  */
 public class HttpRequestHandler extends Handler {
 	
 	public static class TargetAction {
 		
-		public TargetAction(Object target, String action) {
-			super();
-			this.target = new WeakReference<Object>(target);
-			this.action = action;
-		}
-		
 		private WeakReference<Object> target;
 		
 		private String action;
 		
-		@SuppressWarnings("all")		
-		public void invokeWithParam(Object param) {
-			Object target = this.target.get();
-			Class targetClass = target.getClass();
-			try {
-				Method[] methods = targetClass.getDeclaredMethods();
-				for (Method method : methods) {
-					if (method.getName().equals(action) == false) {
-						continue;
-					}
-					Class[] parameterTypes = method.getParameterTypes();
-					if (parameterTypes.length == 0) {
-						method.setAccessible(true);
-						method.invoke(target);
-						break;
-					} 
-					else if (parameterTypes.length > 1) {
-						continue;
-					}
-					Class parameterType = parameterTypes[0];
-					if (parameterType.isAssignableFrom(param.getClass())) {
-						method.setAccessible(true);
-						method.invoke(target, parameterType.cast(param));
-						break;
-					}					
-				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-				//TODO log
-				throw new IllegalArgumentException();
-			}
+		public TargetAction(Object target, String action) {
+			this.target = new WeakReference<Object>(target);
+			this.action = action;
 		}
 				
 	}
@@ -88,65 +50,23 @@ public class HttpRequestHandler extends Handler {
 	
 	private TargetAction onFinish;
 	
-	public HttpRequestHandler() {
-		
-	}
-		
-	
-	/**
-	 * @deprecated This method don't work
-	 */
-	public void setOnSuccess(TargetAction onSuccess) {
-		this.onSuccess = onSuccess;
-	}
-
-	/**
-	 * @deprecated This method don't work
-	 */
-	public void setOnError(TargetAction onError) {
-		this.onError = onError;
-	}
-
-
-	/**
-	 * @deprecated This method don't work
-	 */
-	public void setOnStart(TargetAction onStart) {
-		this.onStart = onStart;
-	}
-	
-	/**
-	 * @deprecated This method don't work
-	 */
-	public void setOnFinish(TargetAction onFinish) {
-		this.onFinish = onFinish;
-		onFinish.invokeWithParam(onFinish);
-	}
-
-	/**
-	 * @deprecated 
-	 */
 	@Override
 	public void handleMessage(Message message) {
 		int what = message.what;
 		TargetAction selectedAction = null;
 		switch (what) {
-		case HttpRequest.REQUEST_FINISHED:
-			selectedAction = onFinish;
-			break;
-		case HttpRequest.REQUEST_STARTED:
-			selectedAction = onStart;
-			break;
-		case HttpRequest.REQUEST_ERROR:
-			selectedAction = onError;
-			break;
-		case HttpRequest.REQUEST_SUCCESS:
-			selectedAction = onSuccess;
-			break;
-		}
-		
-		if (selectedAction != null) {
-			selectedAction.invokeWithParam(message.obj);
+			case HttpRequest.REQUEST_FINISHED:
+				selectedAction = onFinish;
+				break;
+			case HttpRequest.REQUEST_STARTED:
+				selectedAction = onStart;
+				break;
+			case HttpRequest.REQUEST_ERROR:
+				selectedAction = onError;
+				break;
+			case HttpRequest.REQUEST_SUCCESS:
+				selectedAction = onSuccess;
+				break;
 		}
 	}
 	
