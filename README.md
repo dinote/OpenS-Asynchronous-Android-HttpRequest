@@ -11,6 +11,8 @@ Check the callbacks onErrorCallBack, onStartCallBack, onFinishCallBack and the o
 
 The JSONRequests is not stable yet
 
+**The methods setCache don't work more, I need reimplement be patient ;) **
+
 Features
 -----
 - Don't need evoke outside the UI thread Thread controlling
