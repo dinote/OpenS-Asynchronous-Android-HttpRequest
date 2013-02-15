@@ -57,6 +57,7 @@ public abstract class HttpBaseRequest implements Runnable {
 	 */
 	public HttpBaseRequest(String url) {
 		this.targetURL = url;
+		this.selfRequest = new HttpGet();
 	}
 	
 	/**
@@ -67,6 +68,7 @@ public abstract class HttpBaseRequest implements Runnable {
 	public HttpBaseRequest(String url, Parameters params) {
 		this.targetURL = url;
 		this.params = params;
+		this.selfRequest = new HttpGet();
 	}
 	
 	/**
