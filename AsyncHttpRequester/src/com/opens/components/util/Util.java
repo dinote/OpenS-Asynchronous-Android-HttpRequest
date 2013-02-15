@@ -1,6 +1,9 @@
 package com.opens.components.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -37,7 +40,10 @@ public final class Util {
 	 */
 	private static int findSimpleSize(int width, int height) {
 		final int target = 250;
-		return 0;
+		int scale = 1;
+        while(width/scale/2>=target && height/scale/2>=target)
+            scale*=2;
+		return scale;
 	}
 	
 	/**
@@ -45,8 +51,13 @@ public final class Util {
 	 * @param is the input to decode
 	 * @return the string decoded
 	 */
-	public static String decodeString(InputStream is) {
-		return null;
+	public static String decodeString(InputStream is) throws IOException {
+		BufferedReader buffer = new BufferedReader(new InputStreamReader(is));
+		StringBuilder response = new StringBuilder();
+		String line;
+		while((line = buffer.readLine()) != null)
+			response.append(line);
+		return response.toString();
 	}
 	
 }
