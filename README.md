@@ -10,3 +10,5 @@ Features
 - Memory Caching
 - Parameters
 - Examples
+- Website
+- Jar file
