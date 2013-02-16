@@ -72,6 +72,14 @@ public abstract class HttpBaseRequest implements Runnable {
 	}
 	
 	/**
+	 * Set the parameters for the request
+	 * @param params the params
+	 */
+	public void setParameters(Parameters params) {
+		this.params = params;
+	}
+	
+	/**
 	 * Set the request method for this request
 	 * @param method the method
 	 * @see {@link RequestMethods}
@@ -220,7 +228,11 @@ public abstract class HttpBaseRequest implements Runnable {
 	 * @return the get object to request
 	 */
 	private HttpGet get() {
-		HttpGet request = new HttpGet(this.targetURL);
+		HttpGet request = null;
+		if(this.params != null)
+			request = new HttpGet(this.targetURL+"?"+this.params.toString());
+		else
+			request = new HttpGet(this.targetURL);
 		request.setHeaders(this.selfRequest.getAllHeaders());
 		return request;
 	}
@@ -232,6 +244,8 @@ public abstract class HttpBaseRequest implements Runnable {
 	private HttpPost post() {
 		HttpPost request = new HttpPost(this.targetURL);
 		request.setHeaders(this.selfRequest.getAllHeaders());
+		if(this.params != null)
+			request.setEntity(this.params.getEntity());
 		return request;
 	}
 	
@@ -242,6 +256,8 @@ public abstract class HttpBaseRequest implements Runnable {
 	private HttpPut put() {
 		HttpPut request = new HttpPut(this.targetURL);
 		request.setHeaders(this.selfRequest.getAllHeaders());
+		if(this.params != null)
+			request.setEntity(this.params.getEntity());
 		return request;
 	}
 	

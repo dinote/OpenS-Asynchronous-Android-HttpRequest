@@ -74,7 +74,7 @@ public final class Parameters {
 	 * Get the httpEntity for the parameters
 	 * @return the HttpEntity in sucess null in other wise
 	 */
-	protected HttpEntity getEntity() {
+	public HttpEntity getEntity() {
 		List<NameValuePair> params = new LinkedList<NameValuePair>();
 		for(ConcurrentHashMap.Entry<String, String> entry : this.urlParams.entrySet())
 			params.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));

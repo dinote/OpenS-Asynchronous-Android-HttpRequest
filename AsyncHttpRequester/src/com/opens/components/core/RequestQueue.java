@@ -83,7 +83,6 @@ public final class RequestQueue {
 		}
 		else {
 			this.active.clear();
-			this.pending.clear();
 			if(this.finish != null)
 				this.finish.onFinish();
 		}

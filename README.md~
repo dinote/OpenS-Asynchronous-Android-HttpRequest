@@ -5,7 +5,11 @@ OpenS HttpRequest is an asynchronous http client for android, connection throttl
 
 For example, you have to download many files, just create an array with the response wath you want like the BitmapResponse and perform the queue, the examples will be provided soon as the class was finished.
 
-Features
+Features/to-do
 -----
 - Memory Caching
-- Parameters
+- Status code handling
+- Parameters (files) - I thing this have no utilitie by the class idea but if any of kind soul implement this will be merged
+- Examples
+- Website
+- Jar file
