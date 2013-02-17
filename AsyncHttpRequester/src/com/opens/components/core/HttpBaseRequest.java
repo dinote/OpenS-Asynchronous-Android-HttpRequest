@@ -43,15 +43,6 @@ public abstract class HttpBaseRequest implements Runnable {
 	}
 	
 	/**
-	 * Default construct used internally
-	 * use this construct only if you are performing a 
-	 * subclassing of this class
-	 */
-	protected HttpBaseRequest() {
-		
-	}
-	
-	/**
 	 * Full construct
 	 * @param url URL associated with the request
 	 * @param params parameters of request
@@ -79,15 +70,6 @@ public abstract class HttpBaseRequest implements Runnable {
 	 */
 	public HttpBaseRequest(String url, Parameters params) {
 		this(url, params, RequestMethods.GET);
-	}
-	
-	/**
-	 * Construct
-	 * @param url the url associated with the request
-	 * @param method the method of request
-	 */
-	public HttpBaseRequest(String url, RequestMethods method) {
-		this(url, null, RequestMethods.GET);
 	}
 	
 	/**

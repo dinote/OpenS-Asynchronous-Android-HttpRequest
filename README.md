@@ -12,6 +12,5 @@ Features/to-do
 - Memory Caching
 - Status code handling
 - Parameters (files) - I thing this have no utilitie by the class idea but if any of kind soul implement this will be merged
-- Examples
 - Website
-- Jar file
+- Jar file with build.xml

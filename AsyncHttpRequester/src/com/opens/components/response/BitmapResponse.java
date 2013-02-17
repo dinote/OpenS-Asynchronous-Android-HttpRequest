@@ -2,6 +2,8 @@ package com.opens.components.response;
 
 import java.io.InputStream;
 
+import com.opens.components.core.Parameters;
+import com.opens.components.core.RequestMethods;
 import com.opens.components.util.Util;
 
 import android.graphics.Bitmap;
@@ -12,6 +14,33 @@ import android.graphics.Bitmap;
  * @since API Version: 1.0
  */
 public class BitmapResponse extends BynaryResponse {
+	
+	/**
+	 * Full construct
+	 * @param url URL associated with the request
+	 * @param params parameters of request
+	 * @param method the request method {@link RequestMethods}
+	 */
+	public BitmapResponse(String url, Parameters params, RequestMethods method) {
+		super(url, params, method);
+	}
+	
+	/**
+	 * Construct
+	 * @param url the url to execute
+	 */
+	public BitmapResponse(String url) {
+		this(url, null, RequestMethods.GET);
+	}
+	
+	/**
+	 * Construct
+	 * @param url the URL to execute and the raw data of parameters
+	 * @param params the raw data parameters of request
+	 */
+	public BitmapResponse(String url, Parameters params) {
+		this(url, params, RequestMethods.GET);
+	}
 
 	@Override
 	protected void onSuccess(InputStream response) {

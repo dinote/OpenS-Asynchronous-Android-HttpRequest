@@ -65,10 +65,26 @@ public final class RequestQueue {
 	 * Start the next actions if and only if is necessary 
 	 * @param actions All actions to start
 	 */
-	public synchronized void push(Collection<HttpBaseRequest> actions) {
+	public synchronized void push(Collection<? extends HttpBaseRequest> actions) {
 		this.pending.addAll(actions);
 		if(this.active.size() < this.maxConcurrent)
 			this.startNext();
+	}
+	
+	/**
+	 * Return the active size in the stack
+	 * @return the active size in the stack
+	 */
+	public int getActiveSize() {
+		return this.active.size();
+	}
+	
+	/**
+	 * Return the pending size in the stack
+	 * @return the pending size in the stack
+	 */
+	public int getPendingSize() {
+		return this.pending.size();
 	}
 	
 	/**
