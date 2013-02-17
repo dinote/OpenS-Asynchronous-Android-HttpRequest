@@ -229,11 +229,6 @@ public abstract class HttpBaseRequest implements Runnable {
 	}
 	
 	public void run() {
-		if(this.targetURL == null) {
-			this.onError(new Exception("URL is null"));
-			this.onFinish();
-			return;
-		}
 		switch(this.method) {
 			case DELETE:
 				this.selfRequest = this.delete();
