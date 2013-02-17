@@ -52,12 +52,24 @@ public abstract class HttpBaseRequest implements Runnable {
 	}
 	
 	/**
+	 * Full construct
+	 * @param url URL associated with the request
+	 * @param params parameters of request
+	 * @param method the request method {@link RequestMethods}
+	 */
+	public HttpBaseRequest(String url, Parameters params, RequestMethods method) {
+		this.targetURL = url;
+		this.params = params;
+		this.method = method;
+		this.selfRequest = new HttpGet();
+	}
+	
+	/**
 	 * Construct
 	 * @param url the url to execute
 	 */
 	public HttpBaseRequest(String url) {
-		this.targetURL = url;
-		this.selfRequest = new HttpGet();
+		this(url, null, RequestMethods.GET);
 	}
 	
 	/**
@@ -66,9 +78,16 @@ public abstract class HttpBaseRequest implements Runnable {
 	 * @param params the raw data parameters of request
 	 */
 	public HttpBaseRequest(String url, Parameters params) {
-		this.targetURL = url;
-		this.params = params;
-		this.selfRequest = new HttpGet();
+		this(url, params, RequestMethods.GET);
+	}
+	
+	/**
+	 * Construct
+	 * @param url the url associated with the request
+	 * @param method the method of request
+	 */
+	public HttpBaseRequest(String url, RequestMethods method) {
+		this(url, null, RequestMethods.GET);
 	}
 	
 	/**
@@ -77,6 +96,14 @@ public abstract class HttpBaseRequest implements Runnable {
 	 */
 	public void setParameters(Parameters params) {
 		this.params = params;
+	}
+	
+	/**
+	 * Return the method associated with this response
+	 * @return the method associated with this response
+	 */
+	public RequestMethods getRequestMethod() {
+		return this.method;
 	}
 	
 	/**
