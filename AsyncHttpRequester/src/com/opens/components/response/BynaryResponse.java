@@ -30,7 +30,7 @@ public class BynaryResponse extends HttpBaseRequest {
 	 * @param url the url to execute
 	 */
 	public BynaryResponse(String url) {
-		this(url, null, RequestMethods.GET);
+		super(url);
 	}
 	
 	/**
@@ -39,7 +39,7 @@ public class BynaryResponse extends HttpBaseRequest {
 	 * @param params the raw data parameters of request
 	 */
 	public BynaryResponse(String url, Parameters params) {
-		this(url, params, RequestMethods.GET);
+		super(url, params);
 	}
 
 	@Override

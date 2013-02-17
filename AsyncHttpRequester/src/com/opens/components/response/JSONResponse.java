@@ -28,7 +28,7 @@ public class JSONResponse extends StringResponse {
 	 * @param url the url to execute
 	 */
 	public JSONResponse(String url) {
-		this(url, null, RequestMethods.GET);
+		super(url);
 	}
 	
 	/**
@@ -37,12 +37,13 @@ public class JSONResponse extends StringResponse {
 	 * @param params the raw data parameters of request
 	 */
 	public JSONResponse(String url, Parameters params) {
-		this(url, params, RequestMethods.GET);
+		super(url, params);
 	}
 
 	@Override
 	protected void onSuccess(String response) {
 		try {
+			response = response.trim();
 			if(response.startsWith("{"))
 				this.onSuccess(new JSONObject(response));
 			else

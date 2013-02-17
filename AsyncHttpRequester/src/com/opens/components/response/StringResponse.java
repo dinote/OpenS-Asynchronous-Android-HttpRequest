@@ -29,7 +29,7 @@ public class StringResponse extends HttpBaseRequest {
 	 * @param url the url to execute
 	 */
 	public StringResponse(String url) {
-		this(url, null, RequestMethods.GET);
+		super(url);
 	}
 	
 	/**
@@ -38,7 +38,7 @@ public class StringResponse extends HttpBaseRequest {
 	 * @param params the raw data parameters of request
 	 */
 	public StringResponse(String url, Parameters params) {
-		this(url, params, RequestMethods.GET);
+		super(url, params);
 	}
 
 	@Override

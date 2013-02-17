@@ -30,7 +30,7 @@ public class BitmapResponse extends BynaryResponse {
 	 * @param url the url to execute
 	 */
 	public BitmapResponse(String url) {
-		this(url, null, RequestMethods.GET);
+		super(url);
 	}
 	
 	/**
@@ -39,14 +39,14 @@ public class BitmapResponse extends BynaryResponse {
 	 * @param params the raw data parameters of request
 	 */
 	public BitmapResponse(String url, Parameters params) {
-		this(url, params, RequestMethods.GET);
+		super(url, params);
 	}
 
 	@Override
 	protected void onSuccess(InputStream response) {
 		Bitmap bitmap = Util.decodeBitmap(response);
 		if(bitmap == null)
-			this.onError(new Exception("Bitmap response is null"));
+			this.onError(new NullPointerException("Bitmap response is null"));
 		else
 			this.onSuccess(bitmap);
 	}
