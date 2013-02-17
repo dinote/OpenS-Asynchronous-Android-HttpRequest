@@ -100,7 +100,7 @@ public abstract class HttpBaseRequest implements Runnable {
 	 * @param method the method
 	 * @see {@link RequestMethods}
 	 */
-	public final void setRequestMethod(RequestMethods method) {
+	public void setRequestMethod(RequestMethods method) {
 		this.method = method;
 	}
 	
