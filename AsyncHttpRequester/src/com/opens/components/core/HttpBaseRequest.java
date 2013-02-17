@@ -289,7 +289,11 @@ public abstract class HttpBaseRequest implements Runnable {
 		try {
 			this.sendMessageToHandler(REQUEST_CODES.REQUEST_STARTED, null);
 			HttpResponse response = executor.execute(request);
-			this.sendMessageToHandler(REQUEST_CODES.REQUEST_SUCCESS, response); //XXX handle the status codes
+			if(response.getStatusLine().getStatusCode() >= 300)
+				this.sendMessageToHandler(REQUEST_CODES.REQUEST_ERROR, 
+						new Exception(response.getStatusLine().getReasonPhrase()));
+			else
+				this.sendMessageToHandler(REQUEST_CODES.REQUEST_SUCCESS, response);
 		}
 		catch(Exception e) {
 			this.sendMessageToHandler(REQUEST_CODES.REQUEST_ERROR, e);

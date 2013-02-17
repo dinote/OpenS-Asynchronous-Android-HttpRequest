@@ -14,7 +14,6 @@ Just copy this jar file to your /libs folder and start the work.
 To-do:
 -----
 - Memory Caching
-- Status code handling
 - Parameters (files) - I thing this have no utilitie by the class idea but if any of kind soul implement this will be merged
 - Website
 - Jar file with build.xml

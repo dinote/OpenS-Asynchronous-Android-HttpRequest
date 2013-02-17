@@ -87,7 +87,7 @@ public class MainActivity extends Activity implements RequestQueue.OnRequestFini
 	@Override
 	public void onFinish() {
 		Log.d(MainActivity.TAG, "Well done all downloads are finished");
-		//why not discomment the above line? - We have a bug here this call back works... But is called
+		//why not discomment the below line? - We have a bug here this call back works... But is called
 		//on the worker thread and he must be called on UI thread realy I need see who this work
 		//this.allDone.setText("ALL DOWNLOADS DONE :)");
 	}
