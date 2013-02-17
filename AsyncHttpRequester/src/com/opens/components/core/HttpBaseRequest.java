@@ -2,6 +2,7 @@ package com.opens.components.core;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -313,7 +314,8 @@ public abstract class HttpBaseRequest implements Runnable {
 			HttpResponse response = executor.execute(request);
 			if(response.getStatusLine().getStatusCode() >= 300)
 				this.sendMessageToHandler(REQUEST_CODES.REQUEST_ERROR, 
-						new Exception(response.getStatusLine().getReasonPhrase()));
+						new HttpResponseException(response.getStatusLine().getStatusCode(),
+								response.getStatusLine().getReasonPhrase()));
 			else
 				this.sendMessageToHandler(REQUEST_CODES.REQUEST_SUCCESS, response);
 		}
