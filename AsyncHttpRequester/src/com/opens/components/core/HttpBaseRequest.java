@@ -7,6 +7,9 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.params.BasicHttpParams;
+import org.apache.http.params.HttpConnectionParams;
+import org.apache.http.params.HttpParams;
 
 import android.net.http.AndroidHttpClient;
 
@@ -29,6 +32,10 @@ public abstract class HttpBaseRequest implements Runnable {
 	protected Parameters params;
 	/** The header data */
 	protected HttpUriRequest selfRequest;
+	/** Represents the socket time out of requests */
+	protected int socketTimeout;
+	/** Represents the connection timeout of the requests */
+	protected int connectionTimeout;
 	
 	/**
 	 * The default request codes of requests
@@ -139,6 +146,22 @@ public abstract class HttpBaseRequest implements Runnable {
 	}
 	
 	/**
+	 * Set the socket timeout in milliseconds
+	 * @param socketTimeout the new sockettimeout value
+	 */
+	public void setSocketTimeout(int socketTimeout) {
+		this.socketTimeout = socketTimeout;
+	}
+	
+	/**
+	 * Set the connection timeout of this request
+	 * @param connectionTimeout the connection timeout im milliseconds
+	 */
+	public void setConnectionTimeout(int connectionTimeout) {
+		this.connectionTimeout = connectionTimeout;
+	}
+	
+	/**
 	 * Handle the possible message to correct method
 	 * @param what the status of caller
 	 * @param response the response object
@@ -229,6 +252,10 @@ public abstract class HttpBaseRequest implements Runnable {
 				break;
 		}
 		this.selfRequest.setHeader("User-Agent", this.userAgent);
+		final HttpParams httpParams = new BasicHttpParams();
+		HttpConnectionParams.setConnectionTimeout(httpParams, this.connectionTimeout);
+		HttpConnectionParams.setSoTimeout(httpParams, this.socketTimeout);
+		this.selfRequest.setParams(httpParams);
 		this.execute(this.selfRequest);
 	}
 	
@@ -285,7 +312,7 @@ public abstract class HttpBaseRequest implements Runnable {
 	 * @param request Request to execute
 	 */
 	protected void execute(HttpUriRequest request) {
-		AndroidHttpClient executor = AndroidHttpClient.newInstance(this.userAgent);
+		final AndroidHttpClient executor = AndroidHttpClient.newInstance(this.userAgent);
 		try {
 			this.sendMessageToHandler(REQUEST_CODES.REQUEST_STARTED, null);
 			HttpResponse response = executor.execute(request);
