@@ -5,11 +5,19 @@ OpenS HttpRequest is an asynchronous http client for android, connection throttl
 
 - All requests are made outside of your app's main UI thread, but any callback logic will be executed on the same thread as the callback was created using Android's Handler message passing.
 
-For example, you have to download many files, just create an array with the response whath you want like the BitmapResponse and perform the queue.
+For example, you have to download many files, just create an array with the response what you want like the BitmapResponse and perform the queue.
 
 No More Magic!
 
 Just copy this jar file to your /libs folder and start the work.
+
+Features:
+-----
+- Make asynchronous HTTP requests, handle responses in anonymous callbacks
+- HTTP requests happen outside the UI thread
+- Requests use a threadpool to cap concurrent resource usage
+- Perform many requests and recive the results individualy such as JSON, Bitmap, InputStream and String
+- Requests are unique, so you can have diferents responses from diferents sites
 
 To-do:
 -----
