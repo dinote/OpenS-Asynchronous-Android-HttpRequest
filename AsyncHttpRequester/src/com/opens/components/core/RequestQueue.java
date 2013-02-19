@@ -9,7 +9,7 @@ import android.util.Log;
 
 /**
  * The Queue class to manage the requests start and finish
- * manage the threading concurrence 
+ * manage the threading concurrence the default limiter of requests is 4
  * @see #setMaxConcurrent(int)
  * @author Leonardo Rossetto <leonardoxh@gmail.com>
  * @since API Version: 1.0
