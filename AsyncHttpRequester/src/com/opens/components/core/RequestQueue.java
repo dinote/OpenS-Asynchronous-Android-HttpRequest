@@ -32,13 +32,23 @@ public final class RequestQueue {
 	private boolean debug;
 	
 	/**
-	 * Init the lists 
+	 * Construct 
+	 * @see {@link #getInstance()}
 	 */
-	private RequestQueue() {
+	public RequestQueue() {
+		this(4);
+	}
+	
+	/**
+	 * Construct
+	 * @param maxConcurrent the maxConcurrent threads
+	 * @see {@link #getInstance()}
+	 */
+	public RequestQueue(int maxConcurrent) {
 		this.active = new LinkedList<HttpBaseRequest>();
 		this.pending = new LinkedList<HttpBaseRequest>();
 		this.pool = Executors.newCachedThreadPool();
-		this.maxConcurrent = 4;
+		this.maxConcurrent = maxConcurrent;
 	}
 	
 	/**
@@ -115,7 +125,7 @@ public final class RequestQueue {
 	
 	/**
 	 * Return the number of max connections to run
-	 * @return the max connections permited
+	 * @return the max connections permitted
 	 */
 	public int getMaxConcurrent() {
 		return this.maxConcurrent;
@@ -130,7 +140,7 @@ public final class RequestQueue {
 	}
 	
 	/**
-	 * Enable the log no ADT
+	 * Enable the log on ADT
 	 */
 	public void enableDebug() {
 		this.debug = true;

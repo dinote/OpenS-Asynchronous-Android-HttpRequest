@@ -85,13 +85,12 @@ public final class Parameters {
 			return null;
 		}
 	}
-
-	@Override
+	
 	/**
-	 * Return the query representation of the url
-	 * @return String the url query parameter
+	 * Return the query representation of the URL
+	 * @return the url query param
 	 */
-	public String toString() {
+	public String getParamsString() {
 		StringBuilder builder = new StringBuilder();
 		for(ConcurrentHashMap.Entry<String, String> entry : this.urlParams.entrySet()) {
 			if(builder.length() > 0)
@@ -101,6 +100,15 @@ public final class Parameters {
 			builder.append(entry.getValue());
 		}
 		return builder.toString();
+	}
+
+	@Override
+	/**
+	 * Return the query representation of the url
+	 * @return String the url query parameter
+	 */
+	public String toString() {
+		return this.getParamsString();
 	}
 	
 }
