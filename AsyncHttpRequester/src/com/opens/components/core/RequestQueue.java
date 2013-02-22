@@ -30,13 +30,18 @@ public final class RequestQueue {
 	private RequestQueue.OnRequestFinish finish;
 	/** Enable the log messages */
 	private boolean debug;
+	/**
+	 * Indicate the default request limit
+	 * <br>Constant value: {@value}
+	 */
+	public static final int DEFAULT_REQUEST_LIMIT = 4;
 	
 	/**
 	 * Construct 
 	 * @see {@link #getInstance()}
 	 */
 	public RequestQueue() {
-		this(4);
+		this(RequestQueue.DEFAULT_REQUEST_LIMIT);
 	}
 	
 	/**
