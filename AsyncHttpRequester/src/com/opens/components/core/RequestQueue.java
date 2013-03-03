@@ -87,6 +87,22 @@ public final class RequestQueue {
 	}
 	
 	/**
+	 * Start the actions previously added
+	 * @see #addToQueue()
+	 */
+	public synchronized void push() {
+		if(this.active.size() < this.maxConcurrent)
+			this.startNext();
+	}
+	
+	/**
+	 * Add one request to the queue
+	 */
+	public void addToQueue(HttpBaseRequest action) {
+		this.pending.add(action);
+	}
+	
+	/**
 	 * Return the active size in the stack
 	 * @return the active size in the stack
 	 */

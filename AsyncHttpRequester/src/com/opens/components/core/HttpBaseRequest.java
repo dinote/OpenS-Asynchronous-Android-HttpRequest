@@ -24,26 +24,28 @@ import android.net.http.AndroidHttpClient;
 public abstract class HttpBaseRequest implements Runnable {
 	
 	/** The default user-agent to report requests */
-	protected String userAgent = "AsyncHttpRequester-1.0";
+	private String userAgent = "AsyncHttpRequester-1.0";
 	/** The method to execute */
-	protected RequestMethods method;
+	private RequestMethods method;
 	/** The target url to execute */
-	protected String targetURL;
+	private String targetURL;
 	/** The parameters of request */
-	protected Parameters params;
+	private Parameters params;
 	/** The header data */
-	protected HttpUriRequest selfRequest;
+	private HttpUriRequest selfRequest;
 	/** Represents the socket time out of requests */
-	protected int socketTimeout;
+	private int socketTimeout;
 	/** Represents the connection timeout of the requests */
-	protected int connectionTimeout;
+	private int connectionTimeout;
+	/** The default time out of the request */
+	public static final int DEFAULT_TIMEOUT = 20000;
 	
 	/**
 	 * The default request codes of requests
 	 * @author Leonardo Rossetto <leonardoxh@gmail.com>
 	 * @since API Version: 1.0
 	 */
-	private static enum REQUEST_CODES {
+	protected static enum REQUEST_CODES {
 		REQUEST_STARTED,
 		REQUEST_SUCCESS,
 		REQUEST_ERROR,
@@ -60,6 +62,8 @@ public abstract class HttpBaseRequest implements Runnable {
 		this.targetURL = url;
 		this.params = params;
 		this.method = method;
+		this.socketTimeout = HttpBaseRequest.DEFAULT_TIMEOUT;
+		this.connectionTimeout = HttpBaseRequest.DEFAULT_TIMEOUT;
 		this.selfRequest = new HttpGet();
 	}
 	
@@ -142,7 +146,7 @@ public abstract class HttpBaseRequest implements Runnable {
 	 * Set the User-Agent header of requests
 	 * @param userAgent the new User-Agent value
 	 */
-	public final void setUserAgent(String userAgent) {
+	public void setUserAgent(String userAgent) {
 		this.userAgent = userAgent;
 	}
 	
@@ -248,11 +252,18 @@ public abstract class HttpBaseRequest implements Runnable {
 				break;
 		}
 		this.selfRequest.setHeader("User-Agent", this.userAgent);
-		final HttpParams httpParams = new BasicHttpParams();
+		this.setParamsForRequest();
+		this.execute(this.selfRequest);
+	}
+	
+	/**
+	 * Set the parameters for this request
+	 */
+	protected void setParamsForRequest() {
+		HttpParams httpParams = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(httpParams, this.connectionTimeout);
 		HttpConnectionParams.setSoTimeout(httpParams, this.socketTimeout);
 		this.selfRequest.setParams(httpParams);
-		this.execute(this.selfRequest);
 	}
 	
 	/**

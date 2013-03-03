@@ -72,7 +72,7 @@ public final class Parameters {
 	
 	/**
 	 * Get the httpEntity for the parameters
-	 * @return the HttpEntity in sucess null in other wise
+	 * @return the HttpEntity in success null in other wise
 	 */
 	public HttpEntity getEntity() {
 		List<NameValuePair> params = new LinkedList<NameValuePair>();
