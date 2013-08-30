@@ -1,4 +1,4 @@
-OpenS Ð Asynchronous Android HttpRequest 
+OpenS ï¿½ Asynchronous Android HttpRequest 
 =================
 
 OpenS HttpRequest is an asynchronous http client for android, connection throttling and a simple to use callback mechanism. Requests are performed outside the main UI thread, but callbacks are invoked in the same thread that the request was created on. Instead of using the anonymous callbacks, it uses a simpler target-action callback mechanism.
@@ -26,3 +26,18 @@ To-do:
 - Website
 - Jar file with build.xml
 - Cookies support
+
+=================
+  Copyright [2013] [Leonardo Rossetto]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
