@@ -2,6 +2,8 @@ DEPRECATED
 =================
 This library uses a large amount of memory, and is not eficient on requests, prefer use another client like OkHttp or Android Async Http Client.
 
+Use this instead: https://github.com/leonardoxh/AsyncOkHttpClient
+
 
 OpenS Asynchronous Android HttpRequest 
 =================
