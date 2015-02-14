@@ -23,8 +23,13 @@ import opens.components.http.core.HttpRequest;
 public abstract class HttpObjectRequest<C> extends HttpRequest {
 
 	C responseObject;
-	
-	final public C getResponseObject() {
+
+    @Override
+    public void setUserAgent(String userAgent) {
+        super.setUserAgent(userAgent);
+    }
+
+    final public C getResponseObject() {
 		return responseObject;
 	}
 	

@@ -71,12 +71,15 @@ public abstract class HttpRequest implements Runnable {
 	private HttpRequestParams params;
 	
 	private int cachePolicy;
-	
+
+    private String userAgent = null;
+
 	public HttpRequest() {
 		super();		
 		this.handler = new HttpRequestHandler();
 		cachePolicy = DefaultCachePolicy;
 		params = new HttpRequestParams();
+
 	}
 	
 	public HttpResponse getResponse() {
@@ -132,7 +135,9 @@ public abstract class HttpRequest implements Runnable {
 	public void onFinish(Object target, String action) {
 		handler.setOnStart(new HttpRequestHandler.TargetAction(target, action));
 	}
-	
+
+
+
 	public String getUrl() {
 		return url;
 	}
@@ -238,13 +243,17 @@ public abstract class HttpRequest implements Runnable {
 		}
 		
 		HttpClient client = new DefaultHttpClient(); //TODO implement a client pool
-		HttpConnectionParams.setSoTimeout(client.getParams(), timeout);		
-		
-		sendMessageToHandler(REQUEST_STARTED, this);
+
+        if(userAgent!=null) {client.getParams().setParameter( "User-Agent",getUserAgent());}
+
+        HttpConnectionParams.setSoTimeout(client.getParams(), timeout);
+
+        sendMessageToHandler(REQUEST_STARTED, this);
 		try {
 			switch(method) {
 			case METHOD_GET:			
 				response = client.execute(new HttpGet(url + params.toURLParametersString()));
+
 				this.onHttpResponseReceived(response);				
 				break;
 			}
@@ -268,5 +277,13 @@ public abstract class HttpRequest implements Runnable {
 			sendMessageToHandler(REQUEST_ERROR, this);
 		}
 		sendMessageToHandler(REQUEST_FINISHED, this);
-	}	
+	}
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
 }
