@@ -1,8 +1,15 @@
 package opens.components.http.core;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.message.BasicNameValuePair;
 
 /**
  * Container for request parameters 
@@ -28,7 +35,7 @@ public class HttpRequestParams {
 	}
 	
 	public HttpRequestParams stringParam(String key, String val) {
-		if (val == null) {
+		if (val != null) {
 			params.put(key, val);
 		}
 		return this;
@@ -53,5 +60,13 @@ public class HttpRequestParams {
 			out.append(URLEncoder.encode(entry.getValue()));
 		}
 		return out.toString();
+	}
+	
+	public UrlEncodedFormEntity toUrlEncodedFormEntry() throws UnsupportedEncodingException {
+		List<NameValuePair> p = new ArrayList<NameValuePair>();
+		for (Map.Entry<String, String> entry : params.entrySet()) {
+			p.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+		}
+		return new UrlEncodedFormEntity(p, "UTF-8");
 	}
 }

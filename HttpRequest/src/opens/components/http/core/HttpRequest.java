@@ -3,10 +3,16 @@ package opens.components.http.core;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.params.HttpConnectionParams;
 import org.json.JSONArray;
@@ -14,7 +20,7 @@ import org.json.JSONException;
 import org.json.JSONTokener;
 
 import android.os.Message;
-
+import android.util.Log;
 import opens.components.cache.Cache;
 import opens.components.cache.serializers.CacheSerializer;
 import opens.components.http.ImageRequest;
@@ -50,9 +56,9 @@ public abstract class HttpRequest implements Runnable {
 	
 	private HttpRequestHandler	handler; 	
 	
-	private int method = METHOD_GET;
+	protected int method = METHOD_GET;
 	
-	private String url;
+	protected String url;
 	
 	private int timeout = 25000;
 	
@@ -68,9 +74,19 @@ public abstract class HttpRequest implements Runnable {
 	
 	private HttpResponse response = null;
 	
-	private HttpRequestParams params;
+	public HttpRequestParams params;
 	
 	private int cachePolicy;
+	
+	protected int responseStatusCode;
+	
+	public boolean isSuccess() {
+		return isResponseCodeSuccess(responseStatusCode);
+	}
+	
+	public boolean isResponseCodeSuccess(int responseStatusCode) {
+		return responseStatusCode >= 200 && responseStatusCode < 300;	
+	}
 	
 	public HttpRequest() {
 		super();		
@@ -221,7 +237,8 @@ public abstract class HttpRequest implements Runnable {
 			return true;
 		}
 		return false;
-	}
+	}	
+	
 	
 	public void run() {
 		if (canceled) {
@@ -243,17 +260,27 @@ public abstract class HttpRequest implements Runnable {
 		sendMessageToHandler(REQUEST_STARTED, this);
 		try {
 			switch(method) {
-			case METHOD_GET:			
+			case METHOD_GET:				
 				response = client.execute(new HttpGet(url + params.toURLParametersString()));
-				this.onHttpResponseReceived(response);				
+				break;
+			case METHOD_POST:
+				HttpPost post = new HttpPost(url);
+		        post.setEntity(params.toUrlEncodedFormEntry());
+		        response = client.execute(post);
 				break;
 			}
-			
-			if (isCachePolicySet(DoNotWriteToCacheCachePolicy) == false &&
-					cache != null && cacheSerializer != null) {
-				cache.put(getRequestCacheKey(), getObjectToCache(), cacheSerializer);
+			finished = true;
+			responseStatusCode = response.getStatusLine().getStatusCode();
+			if (isResponseCodeSuccess(responseStatusCode)) {
+				this.onHttpResponseReceived(response);
+				if (isCachePolicySet(DoNotWriteToCacheCachePolicy) == false &&
+						cache != null && cacheSerializer != null) {
+					cache.put(getRequestCacheKey(), getObjectToCache(), cacheSerializer);
+				}
+				sendMessageToHandler(REQUEST_SUCCESS, this);
+			} else {
+				throw new Exception();
 			}
-			sendMessageToHandler(REQUEST_SUCCESS, this);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -266,7 +293,7 @@ public abstract class HttpRequest implements Runnable {
 			finished = true;
 			error = true;
 			sendMessageToHandler(REQUEST_ERROR, this);
-		}
+		}		
 		sendMessageToHandler(REQUEST_FINISHED, this);
 	}	
 }
